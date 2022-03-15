@@ -25,6 +25,10 @@
 # @param max_files
 #   maximum number of file resources created for recursion
 #   see puppet file resource, available only on puppet > 7
+# @param always_recurse
+#   since recursing folders can be time consuming
+#   you can avoid in normal runs and only recurse
+#   for ensure => 'absent' repositories.
 # @param distributions
 #   hash to define distributions in this repository
 # @param distributions_defaults
@@ -47,6 +51,7 @@ define reprepro::repository (
   Boolean                          $createsymlinks         = false,
   Optional[String]                 $documentroot           = undef,
   Optional[Integer]                $max_files              = undef,
+  Optional[Boolean]                $always_recurse         = undef,
   Hash                             $distributions          = {},
   Hash                             $distributions_defaults = {},
 ) {
@@ -54,16 +59,18 @@ define reprepro::repository (
 
   if $ensure == 'absent' {
     $directory_ensure = 'absent'
+    $_always_recurse = true
   } else {
+    $_always_recurse = $always_recurse
     $directory_ensure = 'directory'
   }
 
   if $max_files {
     file { "${reprepro::basedir}/${repo_name}":
       ensure    => $directory_ensure,
-      purge     => true,
-      recurse   => true,
-      force     => true,
+      purge     => $_always_recurse,
+      recurse   => $_always_recurse,
+      force     => $_always_recurse,
       mode      => '2755',
       max_files => $max_files,
       owner     => $reprepro::user_name,
@@ -72,9 +79,9 @@ define reprepro::repository (
   } else {
     file { "${reprepro::basedir}/${repo_name}":
       ensure  => $directory_ensure,
-      purge   => true,
-      recurse => true,
-      force   => true,
+      purge   => $_always_recurse,
+      recurse => $_always_recurse,
+      force   => $_always_recurse,
       mode    => '2755',
       owner   => $reprepro::user_name,
       group   => $reprepro::group_name,
