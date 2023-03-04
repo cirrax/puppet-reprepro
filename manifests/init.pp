@@ -27,6 +27,13 @@
 #   defaults to use for all distributions.
 #   they may got overwritten from the repositories
 #   distribution_defaults
+# @param always_recurse
+#   default value for always_recurse in the
+#   define reprepro::repository
+#   since recursing folders can be time consuming
+#   you can avoid in normal runs and only recurse
+#   for ensure => 'absent' repositories.
+#   Default is to recurse always
 #
 class reprepro (
   String  $basedir                = '/var/packages',
@@ -41,6 +48,7 @@ class reprepro (
   String  $package_ensure         = 'present',
   String  $package_name           = 'reprepro',
   Hash    $distributions_defaults = {},
+  Boolean $always_recurse         = true,
 ) {
   # Dependencies
   User<| tag=='reprepro-user' |> -> Exec<| tag=='reprepro-distribution' |>

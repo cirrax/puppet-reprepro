@@ -29,6 +29,7 @@
 #   since recursing folders can be time consuming
 #   you can avoid in normal runs and only recurse
 #   for ensure => 'absent' repositories.
+#   Default is taken from reprepro::always_recurse
 # @param distributions
 #   hash to define distributions in this repository
 # @param distributions_defaults
@@ -61,7 +62,7 @@ define reprepro::repository (
     $directory_ensure = 'absent'
     $_always_recurse = true
   } else {
-    $_always_recurse = $always_recurse
+    $_always_recurse = pick($always_recurse, $reprepro::always_recurse)
     $directory_ensure = 'directory'
   }
 
