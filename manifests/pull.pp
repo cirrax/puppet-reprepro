@@ -33,13 +33,13 @@
 define reprepro::pull (
   String $repository,
   String $from,
-  String $components      = '',
-  String $architectures   = '',
-  String $udebcomponents  = '',
-  String $filter_action   = '',
-  String $filter_name     = '',
-  String $filter_src_name = '',
-  String $filter_formula  = '',
+  String $components      = '', # lint:ignore:params_empty_string_assignment
+  String $architectures   = '', # lint:ignore:params_empty_string_assignment
+  String $udebcomponents  = '', # lint:ignore:params_empty_string_assignment
+  String $filter_action   = '', # lint:ignore:params_empty_string_assignment
+  String $filter_name     = '', # lint:ignore:params_empty_string_assignment
+  String $filter_src_name = '', # lint:ignore:params_empty_string_assignment
+  String $filter_formula  = '', # lint:ignore:params_empty_string_assignment
 ) {
   if $filter_name != '' {
     if $filter_action == '' {
