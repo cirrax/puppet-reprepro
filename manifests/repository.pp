@@ -37,26 +37,20 @@
 #   }
 #
 define reprepro::repository (
-  String                 $repo_name              = $title,
-  String                 $ensure                 = 'present',
-  String                 $incoming_name          = 'incoming',
-  String                 $incoming_dir           = 'incoming',
-  String                 $incoming_tmpdir        = 'tmp',
-  Variant[String, Array] $incoming_allow         = '',
-  Array                  $options                = ['verbose', 'ask-passphrase', 'basedir .'],
-  Boolean                $createsymlinks         = false,
-  Optional[String]       $documentroot           = undef,
-  Optional[Integer]      $max_files              = undef,
-  Hash                   $distributions          = {},
-  Hash                   $distributions_defaults = {},
+  String                           $repo_name              = $title,
+  String                           $ensure                 = 'present',
+  String                           $incoming_name          = 'incoming',
+  String                           $incoming_dir           = 'incoming',
+  String                           $incoming_tmpdir        = 'tmp',
+  Optional[Variant[String, Array]] $incoming_allow         = undef,
+  Array                            $options                = ['verbose', 'ask-passphrase', 'basedir .'],
+  Boolean                          $createsymlinks         = false,
+  Optional[String]                 $documentroot           = undef,
+  Optional[Integer]                $max_files              = undef,
+  Hash                             $distributions          = {},
+  Hash                             $distributions_defaults = {},
 ) {
   include reprepro
-
-  if $incoming_allow =~ Array {
-    $_incoming_allow = $incoming_allow.join(' ')
-  } else {
-    $_incoming_allow = $incoming_allow
-  }
 
   if $ensure == 'absent' {
     $directory_ensure = 'absent'
@@ -122,7 +116,12 @@ define reprepro::repository (
     mode    => '0640',
     owner   => $reprepro::user_name,
     group   => $reprepro::group_name,
-    content => template('reprepro/incoming.erb'),
+    content => epp('reprepro/incoming.epp', {
+        incoming_name   => $incoming_name,
+        incoming_dir    => $incoming_dir,
+        incoming_tmpdir => $incoming_tmpdir,
+        incoming_allow  => $incoming_allow,
+    }),
   }
 
   concat { "${reprepro::basedir}/${repo_name}/conf/distributions":

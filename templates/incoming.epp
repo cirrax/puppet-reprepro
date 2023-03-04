@@ -1,0 +1,16 @@
+<%- | String[1]                        $incoming_name,
+      String[1]                        $incoming_dir,
+      String[1]                        $incoming_tmpdir,
+      Optional[Variant[String, Array]] $incoming_allow = undef,
+| -%>
+Name: <%= $incoming_name %>
+IncomingDir: <%= $incoming_dir %>
+TempDir: <%= $incoming_tmpdir %>
+<% if $incoming_allow =~ String { -%>
+  <%- %>Allow: <%= $incoming_allow %>
+<% } elsif $incoming_allow =~ Array { -%>
+  <%- %>Allow: <%= $incoming_allow.join(' ') %>
+<% } -%>
+Multiple: Yes
+Cleanup: on_deny on_error
+
