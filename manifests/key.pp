@@ -14,25 +14,24 @@ define reprepro::key (
   Optional[String] $key_source  = undef,
   Optional[String] $key_content = undef,
 ) {
-
   include reprepro
 
   $keypath = "${reprepro::homedir}/.gnupg/${key_name}"
 
-  file {$keypath:
-    ensure  => 'present',
-    owner   => $::reprepro::user_name,
-    group   => $::reprepro::group_name,
+  file { $keypath:
+    ensure  => 'file',
+    owner   => $reprepro::user_name,
+    group   => $reprepro::group_name,
     mode    => '0660',
     source  => $key_source,
     content => $key_content,
-    require => User[$::reprepro::user_name],
+    require => User[$reprepro::user_name],
     notify  => Exec["import-${key_name}"],
   }
 
-  exec {"import-${key_name}":
+  exec { "import-${key_name}":
     path        => ['/usr/local/bin', '/usr/bin', '/bin'],
-    command     => "su -c 'gpg --import ${keypath}' ${::reprepro::user_name}",
+    command     => "su -c 'gpg --import ${keypath}' ${reprepro::user_name}",
     refreshonly => true,
   }
 }

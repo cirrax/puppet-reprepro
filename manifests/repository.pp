@@ -50,7 +50,6 @@ define reprepro::repository (
   Hash                   $distributions          = {},
   Hash                   $distributions_defaults = {},
 ) {
-
   include reprepro
 
   if $incoming_allow =~ Array {
@@ -89,7 +88,7 @@ define reprepro::repository (
   }
 
   file {
-    [ "${reprepro::basedir}/${repo_name}/dists",
+    ["${reprepro::basedir}/${repo_name}/dists",
       "${reprepro::basedir}/${repo_name}/pool",
       "${reprepro::basedir}/${repo_name}/conf",
       "${reprepro::basedir}/${repo_name}/lists",
@@ -97,10 +96,10 @@ define reprepro::repository (
       "${reprepro::basedir}/${repo_name}/logs",
       "${reprepro::basedir}/${repo_name}/tmp",
     ]:
-    ensure => $directory_ensure,
-    mode   => '2755',
-    owner  => $reprepro::user_name,
-    group  => $reprepro::group_name,
+      ensure => $directory_ensure,
+      mode   => '2755',
+      owner  => $reprepro::user_name,
+      group  => $reprepro::group_name,
   }
 
   file { "${reprepro::basedir}/${repo_name}/incoming":
@@ -146,7 +145,7 @@ define reprepro::repository (
       content => "# Puppet managed\n",
       target  => "${reprepro::basedir}/${repo_name}/conf/pulls",
     }
-    concat::fragment{"update-repositories add repository ${repo_name}":
+    concat::fragment { "update-repositories add repository ${repo_name}":
       target  => "${reprepro::homedir}/bin/update-all-repositories.sh",
       content => "echo\necho 'updatating ${repo_name}:'\n/usr/bin/reprepro -b ${reprepro::basedir}/${repo_name} --noskipold update\n",
       order   => "50-${repo_name}",
@@ -160,19 +159,18 @@ define reprepro::repository (
     mode   => '0640',
   }
 
-  concat {"${reprepro::basedir}/${repo_name}/conf/pulls":
+  concat { "${reprepro::basedir}/${repo_name}/conf/pulls":
     ensure => $ensure,
     owner  => root,
     group  => root,
     mode   => '0644',
   }
 
-
   if $createsymlinks {
-    exec {"${repo_name}-createsymlinks":
+    exec { "${repo_name}-createsymlinks":
       command     => "su -c 'reprepro -b ${reprepro::basedir}/${repo_name} --delete createsymlinks' ${reprepro::owner}",
       refreshonly => true,
-      subscribe   => Concat[ "${reprepro::basedir}/${repo_name}/conf/distributions" ];
+      subscribe   => Concat["${reprepro::basedir}/${repo_name}/conf/distributions"];
     }
   }
 
@@ -183,20 +181,20 @@ define reprepro::repository (
     } else {
       $link_ensure = 'link'
     }
-    file {"${documentroot}/${repo_name}":
+    file { "${documentroot}/${repo_name}":
       ensure  => $directory_ensure,
     }
-    file {"${documentroot}/${repo_name}/dists":
+    file { "${documentroot}/${repo_name}/dists":
       ensure => $link_ensure,
       target => "${reprepro::basedir}/${repo_name}/dists",
     }
-    file {"${documentroot}/${repo_name}/pool":
+    file { "${documentroot}/${repo_name}/pool":
       ensure => $link_ensure,
       target => "${reprepro::basedir}/${repo_name}/pool",
     }
   }
 
   create_resources('::reprepro::distribution', $distributions,
-    $distributions_defaults + $reprepro::distributions_defaults + {repository => $repo_name}
+    $distributions_defaults + $reprepro::distributions_defaults + { repository => $repo_name }
   )
 }

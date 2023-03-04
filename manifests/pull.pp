@@ -41,7 +41,6 @@ define reprepro::pull (
   String $filter_src_name = '',
   String $filter_formula  = '',
 ) {
-
   if $filter_name != '' {
     if $filter_action == '' {
       $filter_list = "deinstall ${filter_name}-filter-list"
@@ -66,7 +65,7 @@ define reprepro::pull (
     $filter_src_list = ''
   }
 
-  concat::fragment {"pulls-${name}":
+  concat::fragment { "pulls-${name}":
     target  => "${reprepro::basedir}/${repository}/conf/pulls",
     content => template('reprepro/pull.erb'),
   }
