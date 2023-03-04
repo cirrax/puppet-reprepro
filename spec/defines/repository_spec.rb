@@ -12,6 +12,7 @@ describe 'reprepro::repository' do
       createsymlinks: false,
       distributions: {},
       distributions_defaults: {},
+      always_recurse: true,
     }
   end
 
@@ -24,9 +25,9 @@ describe 'reprepro::repository' do
         .with_mode('2755')
         .with_owner(reprepro_params[:owner])
         .with_group(reprepro_params[:group])
-        .with_purge(true)
-        .with_recurse(true)
-        .with_force(true)
+        .with_purge(params[:always_recurse])
+        .with_recurse(params[:always_recurse])
+        .with_force(params[:always_recurse])
     }
 
     it {
@@ -137,6 +138,7 @@ describe 'reprepro::repository' do
             homedir: '/somewhere/homedir',
             owner: 'repouser',
             group: 'repogroup',
+            always_recurse: false,
           }
         end
         let(:title) { 'localpkgs' }
@@ -145,6 +147,33 @@ describe 'reprepro::repository' do
         end
 
         it_behaves_like 'reprepro::repository shared examples'
+      end
+
+      context 'With always_recurse being false in main class' do
+        let(:pre_condition) { "class{'reprepro': always_recurse => false }" }
+        let :reprepro_params do
+          {
+            basedir: '/var/packages',
+            homedir: '/var/packages',
+            owner: 'reprepro',
+            group: 'reprepro',
+          }
+        end
+        let(:title) { 'localpkgs' }
+        let :params do
+          {}
+        end
+
+        it {
+          is_expected.to contain_file(reprepro_params[:basedir] + '/' + title)
+            .with_ensure('directory')
+            .with_mode('2755')
+            .with_owner(reprepro_params[:owner])
+            .with_group(reprepro_params[:group])
+            .with_purge(false)
+            .with_recurse(false)
+            .with_force(false)
+        }
       end
 
       context 'With non default parameters on reprepro main class and ensure absent' do
@@ -159,12 +188,18 @@ describe 'reprepro::repository' do
         end
         let(:title) { 'localpkgs' }
         let :params do
-          default_params.merge(ensure: 'absent')
+          default_params.merge(
+            ensure: 'absent',
+            always_recurse: false,
+          )
         end
 
         it {
           is_expected.to contain_file(reprepro_params[:basedir] + '/' + title)
             .with_ensure('absent')
+            .with_purge(true)
+            .with_recurse(true)
+            .with_force(true)
         }
       end
 
