@@ -56,13 +56,12 @@ define reprepro::update (
   Optional[String] $flat              = undef,
   String           $verify_release    = 'blindtrust',
   String           $ignore_release    = 'No',
-  String           $filter_action     = '',
-  String           $filter_name       = '',
-  String           $filter_src_name   = '',
-  String           $download_lists_as = '',
+  String           $filter_action     = '', # lint:ignore:params_empty_string_assignment
+  String           $filter_name       = '', # lint:ignore:params_empty_string_assignment
+  String           $filter_src_name   = '', # lint:ignore:params_empty_string_assignment
+  String           $download_lists_as = '', # lint:ignore:params_empty_string_assignment
   Optional[String] $getinrelease      = undef,
 ) {
-
   include reprepro
 
   if $flat and ($components or $udebcomponents) {
@@ -93,7 +92,7 @@ define reprepro::update (
     $filter_src_list = ''
   }
 
-  concat::fragment {"update-${update_name}":
+  concat::fragment { "update-${update_name}":
     content => template('reprepro/update.erb'),
     target  => "${reprepro::basedir}/${repository}/conf/updates",
   }

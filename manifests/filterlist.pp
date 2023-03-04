@@ -31,22 +31,21 @@ define reprepro::filterlist (
   Array  $packages  = [],
   String $ensure    = 'present',
 ) {
-
   include reprepro
 
   if (size($packages) > 0) {
-    file {"${reprepro::basedir}/${repository}/conf/${list_name}-filter-list":
+    file { "${reprepro::basedir}/${repository}/conf/${list_name}-filter-list":
       ensure  => $ensure,
       owner   => 'root',
-      group   => $::reprepro::group_name,
+      group   => $reprepro::group_name,
       mode    => '0664',
       content => template('reprepro/filterlist.erb'),
     }
   } else {
-    file {"${reprepro::basedir}/${repository}/conf/${list_name}-filter-list":
+    file { "${reprepro::basedir}/${repository}/conf/${list_name}-filter-list":
       ensure  => $ensure,
       owner   => 'root',
-      group   => $::reprepro::group_name,
+      group   => $reprepro::group_name,
       mode    => '0664',
       replace => false,
     }

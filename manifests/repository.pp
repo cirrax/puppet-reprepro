@@ -37,27 +37,20 @@
 #   }
 #
 define reprepro::repository (
-  String                 $repo_name              = $title,
-  String                 $ensure                 = 'present',
-  String                 $incoming_name          = 'incoming',
-  String                 $incoming_dir           = 'incoming',
-  String                 $incoming_tmpdir        = 'tmp',
-  Variant[String, Array] $incoming_allow         = '',
-  Array                  $options                = ['verbose', 'ask-passphrase', 'basedir .'],
-  Boolean                $createsymlinks         = false,
-  Optional[String]       $documentroot           = undef,
-  Optional[Integer]      $max_files              = undef,
-  Hash                   $distributions          = {},
-  Hash                   $distributions_defaults = {},
+  String                           $repo_name              = $title,
+  String                           $ensure                 = 'present',
+  String                           $incoming_name          = 'incoming',
+  String                           $incoming_dir           = 'incoming',
+  String                           $incoming_tmpdir        = 'tmp',
+  Optional[Variant[String, Array]] $incoming_allow         = undef,
+  Array                            $options                = ['verbose', 'ask-passphrase', 'basedir .'],
+  Boolean                          $createsymlinks         = false,
+  Optional[String]                 $documentroot           = undef,
+  Optional[Integer]                $max_files              = undef,
+  Hash                             $distributions          = {},
+  Hash                             $distributions_defaults = {},
 ) {
-
   include reprepro
-
-  if $incoming_allow =~ Array {
-    $_incoming_allow = $incoming_allow.join(' ')
-  } else {
-    $_incoming_allow = $incoming_allow
-  }
 
   if $ensure == 'absent' {
     $directory_ensure = 'absent'
@@ -89,7 +82,7 @@ define reprepro::repository (
   }
 
   file {
-    [ "${reprepro::basedir}/${repo_name}/dists",
+    ["${reprepro::basedir}/${repo_name}/dists",
       "${reprepro::basedir}/${repo_name}/pool",
       "${reprepro::basedir}/${repo_name}/conf",
       "${reprepro::basedir}/${repo_name}/lists",
@@ -97,10 +90,10 @@ define reprepro::repository (
       "${reprepro::basedir}/${repo_name}/logs",
       "${reprepro::basedir}/${repo_name}/tmp",
     ]:
-    ensure => $directory_ensure,
-    mode   => '2755',
-    owner  => $reprepro::user_name,
-    group  => $reprepro::group_name,
+      ensure => $directory_ensure,
+      mode   => '2755',
+      owner  => $reprepro::user_name,
+      group  => $reprepro::group_name,
   }
 
   file { "${reprepro::basedir}/${repo_name}/incoming":
@@ -123,7 +116,12 @@ define reprepro::repository (
     mode    => '0640',
     owner   => $reprepro::user_name,
     group   => $reprepro::group_name,
-    content => template('reprepro/incoming.erb'),
+    content => epp('reprepro/incoming.epp', {
+        incoming_name   => $incoming_name,
+        incoming_dir    => $incoming_dir,
+        incoming_tmpdir => $incoming_tmpdir,
+        incoming_allow  => $incoming_allow,
+    }),
   }
 
   concat { "${reprepro::basedir}/${repo_name}/conf/distributions":
@@ -146,7 +144,7 @@ define reprepro::repository (
       content => "# Puppet managed\n",
       target  => "${reprepro::basedir}/${repo_name}/conf/pulls",
     }
-    concat::fragment{"update-repositories add repository ${repo_name}":
+    concat::fragment { "update-repositories add repository ${repo_name}":
       target  => "${reprepro::homedir}/bin/update-all-repositories.sh",
       content => "echo\necho 'updatating ${repo_name}:'\n/usr/bin/reprepro -b ${reprepro::basedir}/${repo_name} --noskipold update\n",
       order   => "50-${repo_name}",
@@ -160,19 +158,18 @@ define reprepro::repository (
     mode   => '0640',
   }
 
-  concat {"${reprepro::basedir}/${repo_name}/conf/pulls":
+  concat { "${reprepro::basedir}/${repo_name}/conf/pulls":
     ensure => $ensure,
     owner  => root,
     group  => root,
     mode   => '0644',
   }
 
-
   if $createsymlinks {
-    exec {"${repo_name}-createsymlinks":
+    exec { "${repo_name}-createsymlinks":
       command     => "su -c 'reprepro -b ${reprepro::basedir}/${repo_name} --delete createsymlinks' ${reprepro::owner}",
       refreshonly => true,
-      subscribe   => Concat[ "${reprepro::basedir}/${repo_name}/conf/distributions" ];
+      subscribe   => Concat["${reprepro::basedir}/${repo_name}/conf/distributions"];
     }
   }
 
@@ -183,20 +180,20 @@ define reprepro::repository (
     } else {
       $link_ensure = 'link'
     }
-    file {"${documentroot}/${repo_name}":
+    file { "${documentroot}/${repo_name}":
       ensure  => $directory_ensure,
     }
-    file {"${documentroot}/${repo_name}/dists":
+    file { "${documentroot}/${repo_name}/dists":
       ensure => $link_ensure,
       target => "${reprepro::basedir}/${repo_name}/dists",
     }
-    file {"${documentroot}/${repo_name}/pool":
+    file { "${documentroot}/${repo_name}/pool":
       ensure => $link_ensure,
       target => "${reprepro::basedir}/${repo_name}/pool",
     }
   }
 
   create_resources('::reprepro::distribution', $distributions,
-    $distributions_defaults + $reprepro::distributions_defaults + {repository => $repo_name}
+    $distributions_defaults + $reprepro::distributions_defaults + { repository => $repo_name }
   )
 }

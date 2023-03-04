@@ -42,7 +42,6 @@ class reprepro (
   String  $package_name           = 'reprepro',
   Hash    $distributions_defaults = {},
 ) {
-
   # Dependencies
   User<| tag=='reprepro-user' |> -> Exec<| tag=='reprepro-distribution' |>
 
@@ -112,7 +111,7 @@ class reprepro (
     group => $group_name,
     mode  => '0755',
   }
-  concat::fragment{'update-repositories header':
+  concat::fragment { 'update-repositories header':
     target  => "${homedir}/bin/update-all-repositories.sh",
     content => epp('reprepro/script-header.epp', { 'whoami' => $user_name }),
     order   => '0',

@@ -79,25 +79,24 @@ define reprepro::distribution (
   Optional[String] $label                  = undef,
   Optional[String] $suite                  = undef,
   Optional[String] $description            = undef,
-  String           $sign_with              = '',
+  String           $sign_with              = '', # lint:ignore:params_empty_string_assignment
   String           $codename               = $title,
   Optional[String] $fakecomponentprefix    = undef,
   String           $udebcomponents         = $components,
   String           $deb_indices            = 'Packages Release .gz .bz2',
   String           $dsc_indices            = 'Sources Release .gz .bz2',
-  String           $update                 = '',
-  String           $pull                   = '',
-  String           $uploaders              = '',
+  String           $update                 = '', # lint:ignore:params_empty_string_assignment
+  String           $pull                   = '', # lint:ignore:params_empty_string_assignment
+  String           $uploaders              = '', # lint:ignore:params_empty_string_assignment
   Boolean          $snapshots              = false,
   Boolean          $install_cron           = true,
-  String           $not_automatic          = '',
+  String           $not_automatic          = '', # lint:ignore:params_empty_string_assignment
   String           $but_automatic_upgrades = 'no',
-  String           $log                    = '',
+  String           $log                    = '', # lint:ignore:params_empty_string_assignment
   Hash             $create_pull            = {},
   Hash             $create_update          = {},
   Hash             $create_filterlist      = {},
 ) {
-
   include reprepro
 
   # create update and pull resources:
@@ -116,7 +115,7 @@ define reprepro::distribution (
     notify  => Exec["export distribution ${title}"],
   }
 
-  exec {"export distribution ${title}":
+  exec { "export distribution ${title}":
     command     => "su -c 'reprepro -b ${reprepro::basedir}/${repository} export ${codename}' ${reprepro::user_name}",
     path        => ['/bin', '/usr/bin'],
     refreshonly => true,
@@ -129,12 +128,11 @@ define reprepro::distribution (
   file { "${reprepro::basedir}/${repository}/tmp/${codename}":
     ensure => directory,
     mode   => '0755',
-    owner  => $::reprepro::user_name,
-    group  => $::reprepro::group_name,
+    owner  => $reprepro::user_name,
+    group  => $reprepro::group_name,
   }
 
   if $install_cron {
-
     if $snapshots {
       $command = "${reprepro::homedir}/bin/update-distribution.sh -r ${repository} -c ${codename} -s"
     } else {
@@ -143,7 +141,7 @@ define reprepro::distribution (
 
     cron { "${title} cron":
       command     => $command,
-      user        => $::reprepro::user_name,
+      user        => $reprepro::user_name,
       environment => 'SHELL=/bin/bash',
       minute      => '*/5',
       require     => File["${reprepro::homedir}/bin/update-distribution.sh"],
