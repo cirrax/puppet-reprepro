@@ -10,12 +10,12 @@
 
 ### Defined types
 
-* [`reprepro::distribution`](#repreprodistribution): Adds a "Distribution" to manage.
-* [`reprepro::filterlist`](#repreprofilterlist): Adds a FilterList  Packages list have the same syntax as the output of dpkg --get-selections
-* [`reprepro::key`](#repreprokey): Import a PGP key into the local keyring of the reprepro user
-* [`reprepro::pull`](#reprepropull): Add a repository pull rule.
-* [`reprepro::repository`](#repreprorepository): Adds a packages repository.
-* [`reprepro::update`](#repreproupdate): Adds a packages repository.
+* [`reprepro::distribution`](#reprepro--distribution): Adds a "Distribution" to manage.
+* [`reprepro::filterlist`](#reprepro--filterlist): Adds a FilterList  Packages list have the same syntax as the output of dpkg --get-selections
+* [`reprepro::key`](#reprepro--key): Import a PGP key into the local keyring of the reprepro user
+* [`reprepro::pull`](#reprepro--pull): Add a repository pull rule.
+* [`reprepro::repository`](#reprepro--repository): Adds a packages repository.
+* [`reprepro::update`](#reprepro--update): Adds a packages repository.
 
 ## Classes
 
@@ -27,20 +27,21 @@ Configures reprepro on a server
 
 The following parameters are available in the `reprepro` class:
 
-* [`basedir`](#basedir)
-* [`homedir`](#homedir)
-* [`manage_user`](#manage_user)
-* [`user_name`](#user_name)
-* [`group_name`](#group_name)
-* [`keys`](#keys)
-* [`key_defaults`](#key_defaults)
-* [`repositories`](#repositories)
-* [`repositories_defaults`](#repositories_defaults)
-* [`package_ensure`](#package_ensure)
-* [`package_name`](#package_name)
-* [`distributions_defaults`](#distributions_defaults)
+* [`basedir`](#-reprepro--basedir)
+* [`homedir`](#-reprepro--homedir)
+* [`manage_user`](#-reprepro--manage_user)
+* [`user_name`](#-reprepro--user_name)
+* [`group_name`](#-reprepro--group_name)
+* [`keys`](#-reprepro--keys)
+* [`key_defaults`](#-reprepro--key_defaults)
+* [`repositories`](#-reprepro--repositories)
+* [`repositories_defaults`](#-reprepro--repositories_defaults)
+* [`package_ensure`](#-reprepro--package_ensure)
+* [`package_name`](#-reprepro--package_name)
+* [`distributions_defaults`](#-reprepro--distributions_defaults)
+* [`always_recurse`](#-reprepro--always_recurse)
 
-##### <a name="basedir"></a>`basedir`
+##### <a name="-reprepro--basedir"></a>`basedir`
 
 Data type: `String`
 
@@ -48,7 +49,7 @@ The base directory to house the repository.
 
 Default value: `'/var/packages'`
 
-##### <a name="homedir"></a>`homedir`
+##### <a name="-reprepro--homedir"></a>`homedir`
 
 Data type: `String`
 
@@ -56,15 +57,15 @@ The home directory of the reprepro user.
 
 Default value: `'/var/packages'`
 
-##### <a name="manage_user"></a>`manage_user`
+##### <a name="-reprepro--manage_user"></a>`manage_user`
 
 Data type: `Boolean`
 
 if true, creates the user $user_name
 
-Default value: ``true``
+Default value: `true`
 
-##### <a name="user_name"></a>`user_name`
+##### <a name="-reprepro--user_name"></a>`user_name`
 
 Data type: `String`
 
@@ -72,7 +73,7 @@ user_name who own reprepro
 
 Default value: `'reprepro'`
 
-##### <a name="group_name"></a>`group_name`
+##### <a name="-reprepro--group_name"></a>`group_name`
 
 Data type: `String`
 
@@ -80,7 +81,7 @@ group of user who own reprepro
 
 Default value: `'reprepro'`
 
-##### <a name="keys"></a>`keys`
+##### <a name="-reprepro--keys"></a>`keys`
 
 Data type: `Hash`
 
@@ -88,7 +89,7 @@ hash to create reprepro::key resources.
 
 Default value: `{}`
 
-##### <a name="key_defaults"></a>`key_defaults`
+##### <a name="-reprepro--key_defaults"></a>`key_defaults`
 
 Data type: `Hash`
 
@@ -96,7 +97,7 @@ hash with defaults for keys creation.
 
 Default value: `{}`
 
-##### <a name="repositories"></a>`repositories`
+##### <a name="-reprepro--repositories"></a>`repositories`
 
 Data type: `Hash`
 
@@ -104,7 +105,7 @@ hash to create reprepro::repository resources.
 
 Default value: `{}`
 
-##### <a name="repositories_defaults"></a>`repositories_defaults`
+##### <a name="-reprepro--repositories_defaults"></a>`repositories_defaults`
 
 Data type: `Hash`
 
@@ -112,7 +113,7 @@ hash with defaults for reporitories creation.
 
 Default value: `{}`
 
-##### <a name="package_ensure"></a>`package_ensure`
+##### <a name="-reprepro--package_ensure"></a>`package_ensure`
 
 Data type: `String`
 
@@ -120,7 +121,7 @@ what to ensure for packages
 
 Default value: `'present'`
 
-##### <a name="package_name"></a>`package_name`
+##### <a name="-reprepro--package_name"></a>`package_name`
 
 Data type: `String`
 
@@ -128,7 +129,7 @@ name of the package to install
 
 Default value: `'reprepro'`
 
-##### <a name="distributions_defaults"></a>`distributions_defaults`
+##### <a name="-reprepro--distributions_defaults"></a>`distributions_defaults`
 
 Data type: `Hash`
 
@@ -138,9 +139,22 @@ distribution_defaults
 
 Default value: `{}`
 
+##### <a name="-reprepro--always_recurse"></a>`always_recurse`
+
+Data type: `Boolean`
+
+default value for always_recurse in the
+define reprepro::repository
+since recursing folders can be time consuming
+you can avoid in normal runs and only recurse
+for ensure => 'absent' repositories.
+Default is to recurse always
+
+Default value: `true`
+
 ## Defined types
 
-### <a name="repreprodistribution"></a>`reprepro::distribution`
+### <a name="reprepro--distribution"></a>`reprepro::distribution`
 
 Adds a "Distribution" to manage.
 
@@ -165,92 +179,92 @@ reprepro::distribution {"lenny":
 
 The following parameters are available in the `reprepro::distribution` defined type:
 
-* [`repository`](#repository)
-* [`version`](#version)
-* [`origin`](#origin)
-* [`label`](#label)
-* [`suite`](#suite)
-* [`architectures`](#architectures)
-* [`components`](#components)
-* [`description`](#description)
-* [`sign_with`](#sign_with)
-* [`codename`](#codename)
-* [`fakecomponentprefix`](#fakecomponentprefix)
-* [`udebcomponents`](#udebcomponents)
-* [`deb_indices`](#deb_indices)
-* [`dsc_indices`](#dsc_indices)
-* [`update`](#update)
-* [`pull`](#pull)
-* [`uploaders`](#uploaders)
-* [`snapshots`](#snapshots)
-* [`install_cron`](#install_cron)
-* [`not_automatic`](#not_automatic)
-* [`but_automatic_upgrades`](#but_automatic_upgrades)
-* [`log`](#log)
-* [`create_pull`](#create_pull)
-* [`create_update`](#create_update)
-* [`create_filterlist`](#create_filterlist)
+* [`repository`](#-reprepro--distribution--repository)
+* [`version`](#-reprepro--distribution--version)
+* [`origin`](#-reprepro--distribution--origin)
+* [`label`](#-reprepro--distribution--label)
+* [`suite`](#-reprepro--distribution--suite)
+* [`architectures`](#-reprepro--distribution--architectures)
+* [`components`](#-reprepro--distribution--components)
+* [`description`](#-reprepro--distribution--description)
+* [`sign_with`](#-reprepro--distribution--sign_with)
+* [`codename`](#-reprepro--distribution--codename)
+* [`fakecomponentprefix`](#-reprepro--distribution--fakecomponentprefix)
+* [`udebcomponents`](#-reprepro--distribution--udebcomponents)
+* [`deb_indices`](#-reprepro--distribution--deb_indices)
+* [`dsc_indices`](#-reprepro--distribution--dsc_indices)
+* [`update`](#-reprepro--distribution--update)
+* [`pull`](#-reprepro--distribution--pull)
+* [`uploaders`](#-reprepro--distribution--uploaders)
+* [`snapshots`](#-reprepro--distribution--snapshots)
+* [`install_cron`](#-reprepro--distribution--install_cron)
+* [`not_automatic`](#-reprepro--distribution--not_automatic)
+* [`but_automatic_upgrades`](#-reprepro--distribution--but_automatic_upgrades)
+* [`log`](#-reprepro--distribution--log)
+* [`create_pull`](#-reprepro--distribution--create_pull)
+* [`create_update`](#-reprepro--distribution--create_update)
+* [`create_filterlist`](#-reprepro--distribution--create_filterlist)
 
-##### <a name="repository"></a>`repository`
+##### <a name="-reprepro--distribution--repository"></a>`repository`
 
 Data type: `String`
 
 the name of the repository to attach this
 distribution to.
 
-##### <a name="version"></a>`version`
+##### <a name="-reprepro--distribution--version"></a>`version`
 
 Data type: `Optional[String]`
 
 distribution version
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="origin"></a>`origin`
+##### <a name="-reprepro--distribution--origin"></a>`origin`
 
 Data type: `Optional[String]`
 
 package origin
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="label"></a>`label`
+##### <a name="-reprepro--distribution--label"></a>`label`
 
 Data type: `Optional[String]`
 
 package label
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="suite"></a>`suite`
+##### <a name="-reprepro--distribution--suite"></a>`suite`
 
 Data type: `Optional[String]`
 
 package suite
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="architectures"></a>`architectures`
+##### <a name="-reprepro--distribution--architectures"></a>`architectures`
 
 Data type: `String`
 
 available architectures
 
-##### <a name="components"></a>`components`
+##### <a name="-reprepro--distribution--components"></a>`components`
 
 Data type: `String`
 
 available components
 
-##### <a name="description"></a>`description`
+##### <a name="-reprepro--distribution--description"></a>`description`
 
 Data type: `Optional[String]`
 
 a short description
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="sign_with"></a>`sign_with`
+##### <a name="-reprepro--distribution--sign_with"></a>`sign_with`
 
 Data type: `String`
 
@@ -258,7 +272,7 @@ email of the gpg key
 
 Default value: `''`
 
-##### <a name="codename"></a>`codename`
+##### <a name="-reprepro--distribution--codename"></a>`codename`
 
 Data type: `String`
 
@@ -266,15 +280,15 @@ codename (defaults to $title)
 
 Default value: `$title`
 
-##### <a name="fakecomponentprefix"></a>`fakecomponentprefix`
+##### <a name="-reprepro--distribution--fakecomponentprefix"></a>`fakecomponentprefix`
 
 Data type: `Optional[String]`
 
 fakecomponentprefix
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="udebcomponents"></a>`udebcomponents`
+##### <a name="-reprepro--distribution--udebcomponents"></a>`udebcomponents`
 
 Data type: `String`
 
@@ -282,7 +296,7 @@ udebcomponents
 
 Default value: `$components`
 
-##### <a name="deb_indices"></a>`deb_indices`
+##### <a name="-reprepro--distribution--deb_indices"></a>`deb_indices`
 
 Data type: `String`
 
@@ -290,7 +304,7 @@ file name and compression
 
 Default value: `'Packages Release .gz .bz2'`
 
-##### <a name="dsc_indices"></a>`dsc_indices`
+##### <a name="-reprepro--distribution--dsc_indices"></a>`dsc_indices`
 
 Data type: `String`
 
@@ -298,7 +312,7 @@ file name and compression
 
 Default value: `'Sources Release .gz .bz2'`
 
-##### <a name="update"></a>`update`
+##### <a name="-reprepro--distribution--update"></a>`update`
 
 Data type: `String`
 
@@ -306,7 +320,7 @@ update policy name
 
 Default value: `''`
 
-##### <a name="pull"></a>`pull`
+##### <a name="-reprepro--distribution--pull"></a>`pull`
 
 Data type: `String`
 
@@ -314,7 +328,7 @@ pull policy name
 
 Default value: `''`
 
-##### <a name="uploaders"></a>`uploaders`
+##### <a name="-reprepro--distribution--uploaders"></a>`uploaders`
 
 Data type: `String`
 
@@ -322,23 +336,23 @@ who is allowed to upload packages
 
 Default value: `''`
 
-##### <a name="snapshots"></a>`snapshots`
+##### <a name="-reprepro--distribution--snapshots"></a>`snapshots`
 
 Data type: `Boolean`
 
 create a reprepro snapshot on each update
 
-Default value: ``false``
+Default value: `false`
 
-##### <a name="install_cron"></a>`install_cron`
+##### <a name="-reprepro--distribution--install_cron"></a>`install_cron`
 
 Data type: `Boolean`
 
 install cron job to automatically include new packages
 
-Default value: ``true``
+Default value: `true`
 
-##### <a name="not_automatic"></a>`not_automatic`
+##### <a name="-reprepro--distribution--not_automatic"></a>`not_automatic`
 
 Data type: `String`
 
@@ -347,7 +361,7 @@ value are "yes" or "no"
 
 Default value: `''`
 
-##### <a name="but_automatic_upgrades"></a>`but_automatic_upgrades`
+##### <a name="-reprepro--distribution--but_automatic_upgrades"></a>`but_automatic_upgrades`
 
 Data type: `String`
 
@@ -356,7 +370,7 @@ value are "yes" or "no"
 
 Default value: `'no'`
 
-##### <a name="log"></a>`log`
+##### <a name="-reprepro--distribution--log"></a>`log`
 
 Data type: `String`
 
@@ -364,7 +378,7 @@ log
 
 Default value: `''`
 
-##### <a name="create_pull"></a>`create_pull`
+##### <a name="-reprepro--distribution--create_pull"></a>`create_pull`
 
 Data type: `Hash`
 
@@ -373,7 +387,7 @@ the name will be appended to $pull
 
 Default value: `{}`
 
-##### <a name="create_update"></a>`create_update`
+##### <a name="-reprepro--distribution--create_update"></a>`create_update`
 
 Data type: `Hash`
 
@@ -382,7 +396,7 @@ the name will be appended to $update
 
 Default value: `{}`
 
-##### <a name="create_filterlist"></a>`create_filterlist`
+##### <a name="-reprepro--distribution--create_filterlist"></a>`create_filterlist`
 
 Data type: `Hash`
 
@@ -390,7 +404,7 @@ hash to create reprerpo::filterlist resource
 
 Default value: `{}`
 
-### <a name="repreprofilterlist"></a>`reprepro::filterlist`
+### <a name="reprepro--filterlist"></a>`reprepro::filterlist`
 
 Adds a FilterList
 
@@ -416,12 +430,12 @@ reprepro::filterlist {"lenny-backports":
 
 The following parameters are available in the `reprepro::filterlist` defined type:
 
-* [`list_name`](#list_name)
-* [`ensure`](#ensure)
-* [`repository`](#repository)
-* [`packages`](#packages)
+* [`list_name`](#-reprepro--filterlist--list_name)
+* [`ensure`](#-reprepro--filterlist--ensure)
+* [`repository`](#-reprepro--filterlist--repository)
+* [`packages`](#-reprepro--filterlist--packages)
 
-##### <a name="list_name"></a>`list_name`
+##### <a name="-reprepro--filterlist--list_name"></a>`list_name`
 
 Data type: `String`
 
@@ -429,7 +443,7 @@ name of the filter list
 
 Default value: `$title`
 
-##### <a name="ensure"></a>`ensure`
+##### <a name="-reprepro--filterlist--ensure"></a>`ensure`
 
 Data type: `String`
 
@@ -437,13 +451,13 @@ present/absent, defaults to present
 
 Default value: `'present'`
 
-##### <a name="repository"></a>`repository`
+##### <a name="-reprepro--filterlist--repository"></a>`repository`
 
 Data type: `String`
 
 the name of the repository
 
-##### <a name="packages"></a>`packages`
+##### <a name="-reprepro--filterlist--packages"></a>`packages`
 
 Data type: `Array`
 
@@ -452,7 +466,7 @@ content won't be managed by puppet
 
 Default value: `[]`
 
-### <a name="repreprokey"></a>`reprepro::key`
+### <a name="reprepro--key"></a>`reprepro::key`
 
 Import a PGP key into the local keyring of the reprepro user
 
@@ -460,11 +474,11 @@ Import a PGP key into the local keyring of the reprepro user
 
 The following parameters are available in the `reprepro::key` defined type:
 
-* [`key_name`](#key_name)
-* [`key_source`](#key_source)
-* [`key_content`](#key_content)
+* [`key_name`](#-reprepro--key--key_name)
+* [`key_source`](#-reprepro--key--key_source)
+* [`key_content`](#-reprepro--key--key_content)
 
-##### <a name="key_name"></a>`key_name`
+##### <a name="-reprepro--key--key_name"></a>`key_name`
 
 Data type: `String`
 
@@ -472,24 +486,24 @@ name of the key
 
 Default value: `$title`
 
-##### <a name="key_source"></a>`key_source`
+##### <a name="-reprepro--key--key_source"></a>`key_source`
 
 Data type: `Optional[String]`
 
 Path to the key in gpg --export format. This is
 used as the source parameter in a puppet File resource.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="key_content"></a>`key_content`
+##### <a name="-reprepro--key--key_content"></a>`key_content`
 
 Data type: `Optional[String]`
 
 define the key content instead of pointing to a source file
 
-Default value: ``undef``
+Default value: `undef`
 
-### <a name="reprepropull"></a>`reprepro::pull`
+### <a name="reprepro--pull"></a>`reprepro::pull`
 
 Add a repository pull rule.
 
@@ -509,35 +523,35 @@ reprepro::pull {'lenny-backports':
 
 The following parameters are available in the `reprepro::pull` defined type:
 
-* [`name`](#name)
-* [`repository`](#repository)
-* [`from`](#from)
-* [`components`](#components)
-* [`architectures`](#architectures)
-* [`udebcomponents`](#udebcomponents)
-* [`filter_action`](#filter_action)
-* [`filter_name`](#filter_name)
-* [`filter_src_name`](#filter_src_name)
-* [`filter_formula`](#filter_formula)
+* [`name`](#-reprepro--pull--name)
+* [`repository`](#-reprepro--pull--repository)
+* [`from`](#-reprepro--pull--from)
+* [`components`](#-reprepro--pull--components)
+* [`architectures`](#-reprepro--pull--architectures)
+* [`udebcomponents`](#-reprepro--pull--udebcomponents)
+* [`filter_action`](#-reprepro--pull--filter_action)
+* [`filter_name`](#-reprepro--pull--filter_name)
+* [`filter_src_name`](#-reprepro--pull--filter_src_name)
+* [`filter_formula`](#-reprepro--pull--filter_formula)
 
-##### <a name="name"></a>`name`
+##### <a name="-reprepro--pull--name"></a>`name`
 
 the name of the pull rule to use in the Pull
 field in conf/distributions
 
-##### <a name="repository"></a>`repository`
+##### <a name="-reprepro--pull--repository"></a>`repository`
 
 Data type: `String`
 
 the local repository to pull to
 
-##### <a name="from"></a>`from`
+##### <a name="-reprepro--pull--from"></a>`from`
 
 Data type: `String`
 
 The codename of the distribution to pull packages from.
 
-##### <a name="components"></a>`components`
+##### <a name="-reprepro--pull--components"></a>`components`
 
 Data type: `String`
 
@@ -545,7 +559,7 @@ The components of the distribution to get from.
 
 Default value: `''`
 
-##### <a name="architectures"></a>`architectures`
+##### <a name="-reprepro--pull--architectures"></a>`architectures`
 
 Data type: `String`
 
@@ -553,7 +567,7 @@ The architectures to update.
 
 Default value: `''`
 
-##### <a name="udebcomponents"></a>`udebcomponents`
+##### <a name="-reprepro--pull--udebcomponents"></a>`udebcomponents`
 
 Data type: `String`
 
@@ -561,7 +575,7 @@ Like Components but for the udebs.
 
 Default value: `''`
 
-##### <a name="filter_action"></a>`filter_action`
+##### <a name="-reprepro--pull--filter_action"></a>`filter_action`
 
 Data type: `String`
 
@@ -569,7 +583,7 @@ default action when something is not found in the list
 
 Default value: `''`
 
-##### <a name="filter_name"></a>`filter_name`
+##### <a name="-reprepro--pull--filter_name"></a>`filter_name`
 
 Data type: `String`
 
@@ -577,7 +591,7 @@ a list of filenames in the format of dpkg --get-selections
 
 Default value: `''`
 
-##### <a name="filter_src_name"></a>`filter_src_name`
+##### <a name="-reprepro--pull--filter_src_name"></a>`filter_src_name`
 
 Data type: `String`
 
@@ -585,7 +599,7 @@ FilterSrcList parameter
 
 Default value: `''`
 
-##### <a name="filter_formula"></a>`filter_formula`
+##### <a name="-reprepro--pull--filter_formula"></a>`filter_formula`
 
 Data type: `String`
 
@@ -593,7 +607,7 @@ FilterFormula
 
 Default value: `''`
 
-### <a name="repreprorepository"></a>`reprepro::repository`
+### <a name="reprepro--repository"></a>`reprepro::repository`
 
 Adds a packages repository.
 
@@ -612,20 +626,21 @@ reprepro::repository { 'localpkgs':
 
 The following parameters are available in the `reprepro::repository` defined type:
 
-* [`repo_name`](#repo_name)
-* [`ensure`](#ensure)
-* [`incoming_name`](#incoming_name)
-* [`incoming_dir`](#incoming_dir)
-* [`incoming_tmpdir`](#incoming_tmpdir)
-* [`incoming_allow`](#incoming_allow)
-* [`options`](#options)
-* [`createsymlinks`](#createsymlinks)
-* [`documentroot`](#documentroot)
-* [`max_files`](#max_files)
-* [`distributions`](#distributions)
-* [`distributions_defaults`](#distributions_defaults)
+* [`repo_name`](#-reprepro--repository--repo_name)
+* [`ensure`](#-reprepro--repository--ensure)
+* [`incoming_name`](#-reprepro--repository--incoming_name)
+* [`incoming_dir`](#-reprepro--repository--incoming_dir)
+* [`incoming_tmpdir`](#-reprepro--repository--incoming_tmpdir)
+* [`incoming_allow`](#-reprepro--repository--incoming_allow)
+* [`options`](#-reprepro--repository--options)
+* [`createsymlinks`](#-reprepro--repository--createsymlinks)
+* [`documentroot`](#-reprepro--repository--documentroot)
+* [`max_files`](#-reprepro--repository--max_files)
+* [`always_recurse`](#-reprepro--repository--always_recurse)
+* [`distributions`](#-reprepro--repository--distributions)
+* [`distributions_defaults`](#-reprepro--repository--distributions_defaults)
 
-##### <a name="repo_name"></a>`repo_name`
+##### <a name="-reprepro--repository--repo_name"></a>`repo_name`
 
 Data type: `String`
 
@@ -633,7 +648,7 @@ the name of the repository
 
 Default value: `$title`
 
-##### <a name="ensure"></a>`ensure`
+##### <a name="-reprepro--repository--ensure"></a>`ensure`
 
 Data type: `String`
 
@@ -641,7 +656,7 @@ present/absent, defaults to present
 
 Default value: `'present'`
 
-##### <a name="incoming_name"></a>`incoming_name`
+##### <a name="-reprepro--repository--incoming_name"></a>`incoming_name`
 
 Data type: `String`
 
@@ -649,7 +664,7 @@ the name of the rule-set, used as argument
 
 Default value: `'incoming'`
 
-##### <a name="incoming_dir"></a>`incoming_dir`
+##### <a name="-reprepro--repository--incoming_dir"></a>`incoming_dir`
 
 Data type: `String`
 
@@ -657,7 +672,7 @@ the name of the directory to scan for .changes files
 
 Default value: `'incoming'`
 
-##### <a name="incoming_tmpdir"></a>`incoming_tmpdir`
+##### <a name="-reprepro--repository--incoming_tmpdir"></a>`incoming_tmpdir`
 
 Data type: `String`
 
@@ -666,15 +681,15 @@ before they are read
 
 Default value: `'tmp'`
 
-##### <a name="incoming_allow"></a>`incoming_allow`
+##### <a name="-reprepro--repository--incoming_allow"></a>`incoming_allow`
 
-Data type: `Variant[String, Array]`
+Data type: `Optional[Variant[String, Array]]`
 
 allowed distributions
 
-Default value: `''`
+Default value: `undef`
 
-##### <a name="options"></a>`options`
+##### <a name="-reprepro--repository--options"></a>`options`
 
 Data type: `Array`
 
@@ -682,15 +697,15 @@ reprepro options
 
 Default value: `['verbose', 'ask-passphrase', 'basedir .']`
 
-##### <a name="createsymlinks"></a>`createsymlinks`
+##### <a name="-reprepro--repository--createsymlinks"></a>`createsymlinks`
 
 Data type: `Boolean`
 
 create suite symlinks
 
-Default value: ``false``
+Default value: `false`
 
-##### <a name="documentroot"></a>`documentroot`
+##### <a name="-reprepro--repository--documentroot"></a>`documentroot`
 
 Data type: `Optional[String]`
 
@@ -698,18 +713,29 @@ documentroot of the webserver (default undef)
 if set, softlinks to the reprepro directories are made
 the directory $documentroot must already exist
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="max_files"></a>`max_files`
+##### <a name="-reprepro--repository--max_files"></a>`max_files`
 
 Data type: `Optional[Integer]`
 
 maximum number of file resources created for recursion
 see puppet file resource, available only on puppet > 7
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="distributions"></a>`distributions`
+##### <a name="-reprepro--repository--always_recurse"></a>`always_recurse`
+
+Data type: `Optional[Boolean]`
+
+since recursing folders can be time consuming
+you can avoid in normal runs and only recurse
+for ensure => 'absent' repositories.
+Default is taken from reprepro::always_recurse
+
+Default value: `undef`
+
+##### <a name="-reprepro--repository--distributions"></a>`distributions`
 
 Data type: `Hash`
 
@@ -717,7 +743,7 @@ hash to define distributions in this repository
 
 Default value: `{}`
 
-##### <a name="distributions_defaults"></a>`distributions_defaults`
+##### <a name="-reprepro--repository--distributions_defaults"></a>`distributions_defaults`
 
 Data type: `Hash`
 
@@ -725,7 +751,7 @@ defaults for all distributions in this repository
 
 Default value: `{}`
 
-### <a name="repreproupdate"></a>`reprepro::update`
+### <a name="reprepro--update"></a>`reprepro::update`
 
 Adds a packages repository.
 
@@ -746,23 +772,23 @@ reprepro::update {"lenny-backports":
 
 The following parameters are available in the `reprepro::update` defined type:
 
-* [`update_name`](#update_name)
-* [`suite`](#suite)
-* [`repository`](#repository)
-* [`url`](#url)
-* [`architectures`](#architectures)
-* [`components`](#components)
-* [`udebcomponents`](#udebcomponents)
-* [`flat`](#flat)
-* [`verify_release`](#verify_release)
-* [`ignore_release`](#ignore_release)
-* [`filter_action`](#filter_action)
-* [`filter_name`](#filter_name)
-* [`filter_src_name`](#filter_src_name)
-* [`download_lists_as`](#download_lists_as)
-* [`getinrelease`](#getinrelease)
+* [`update_name`](#-reprepro--update--update_name)
+* [`suite`](#-reprepro--update--suite)
+* [`repository`](#-reprepro--update--repository)
+* [`url`](#-reprepro--update--url)
+* [`architectures`](#-reprepro--update--architectures)
+* [`components`](#-reprepro--update--components)
+* [`udebcomponents`](#-reprepro--update--udebcomponents)
+* [`flat`](#-reprepro--update--flat)
+* [`verify_release`](#-reprepro--update--verify_release)
+* [`ignore_release`](#-reprepro--update--ignore_release)
+* [`filter_action`](#-reprepro--update--filter_action)
+* [`filter_name`](#-reprepro--update--filter_name)
+* [`filter_src_name`](#-reprepro--update--filter_src_name)
+* [`download_lists_as`](#-reprepro--update--download_lists_as)
+* [`getinrelease`](#-reprepro--update--getinrelease)
 
-##### <a name="update_name"></a>`update_name`
+##### <a name="-reprepro--update--update_name"></a>`update_name`
 
 Data type: `String`
 
@@ -771,57 +797,57 @@ Update field in conf/distributions
 
 Default value: `$title`
 
-##### <a name="suite"></a>`suite`
+##### <a name="-reprepro--update--suite"></a>`suite`
 
 Data type: `String`
 
 package suite
 
-##### <a name="repository"></a>`repository`
+##### <a name="-reprepro--update--repository"></a>`repository`
 
 Data type: `String`
 
 the name of the repository
 
-##### <a name="url"></a>`url`
+##### <a name="-reprepro--update--url"></a>`url`
 
 Data type: `String`
 
 a valid repository URL
 
-##### <a name="architectures"></a>`architectures`
+##### <a name="-reprepro--update--architectures"></a>`architectures`
 
 Data type: `Optional[String]`
 
 architectures
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="components"></a>`components`
+##### <a name="-reprepro--update--components"></a>`components`
 
 Data type: `Optional[String]`
 
 components
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="udebcomponents"></a>`udebcomponents`
+##### <a name="-reprepro--update--udebcomponents"></a>`udebcomponents`
 
 Data type: `Optional[String]`
 
 udebcomponents
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="flat"></a>`flat`
+##### <a name="-reprepro--update--flat"></a>`flat`
 
 Data type: `Optional[String]`
 
 flat
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="verify_release"></a>`verify_release`
+##### <a name="-reprepro--update--verify_release"></a>`verify_release`
 
 Data type: `String`
 
@@ -829,7 +855,7 @@ check the GPG signature Releasefile
 
 Default value: `'blindtrust'`
 
-##### <a name="ignore_release"></a>`ignore_release`
+##### <a name="-reprepro--update--ignore_release"></a>`ignore_release`
 
 Data type: `String`
 
@@ -837,7 +863,7 @@ ignore_release
 
 Default value: `'No'`
 
-##### <a name="filter_action"></a>`filter_action`
+##### <a name="-reprepro--update--filter_action"></a>`filter_action`
 
 Data type: `String`
 
@@ -845,7 +871,7 @@ default action when something is not found in the list
 
 Default value: `''`
 
-##### <a name="filter_name"></a>`filter_name`
+##### <a name="-reprepro--update--filter_name"></a>`filter_name`
 
 Data type: `String`
 
@@ -854,7 +880,7 @@ matching binary packages
 
 Default value: `''`
 
-##### <a name="filter_src_name"></a>`filter_src_name`
+##### <a name="-reprepro--update--filter_src_name"></a>`filter_src_name`
 
 Data type: `String`
 
@@ -863,7 +889,7 @@ matching source packages
 
 Default value: `''`
 
-##### <a name="download_lists_as"></a>`download_lists_as`
+##### <a name="-reprepro--update--download_lists_as"></a>`download_lists_as`
 
 Data type: `String`
 
@@ -872,12 +898,12 @@ variant of needed index files ( .gz, .bz2, .lzma, .xz and .diff)
 
 Default value: `''`
 
-##### <a name="getinrelease"></a>`getinrelease`
+##### <a name="-reprepro--update--getinrelease"></a>`getinrelease`
 
 Data type: `Optional[String]`
 
 if this is set to 'no', no InRelease file is downloaded but
 only Release (and Release.gpg ) are tried.
 
-Default value: ``undef``
+Default value: `undef`
 
