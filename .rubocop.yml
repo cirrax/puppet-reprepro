@@ -3,5 +3,7 @@ inherit_gem:
   voxpupuli-test: rubocop.yml
 
 Layout/DotPosition:
-  # blah: dsfsf
   EnforcedStyle: leading
+
+Rspec/MultipleMemoizedHelpers:
+  Enabled: false

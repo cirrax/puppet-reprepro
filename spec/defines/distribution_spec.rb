@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'reprepro::distribution' do
@@ -33,23 +35,26 @@ describe 'reprepro::distribution' do
     it { is_expected.to compile.with_all_deps }
 
     it {
-      is_expected.to contain_concat__fragment('distribution-' + params[:codename])
-        .with_target(reprepro_params[:basedir] + '/' + params[:repository] + '/conf/distributions')
-        .that_notifies('Exec[export distribution ' + params[:codename] + ']')
+      is_expected.to contain_concat__fragment("distribution-#{params[:codename]}")
+        .with_target("#{reprepro_params[:basedir]}/#{params[:repository]}/conf/distributions")
+        .that_notifies("Exec[export distribution #{params[:codename]}]")
     }
+
     it {
-      is_expected.to contain_exec('export distribution ' + params[:codename])
-        .with_command("su -c 'reprepro -b " + reprepro_params[:basedir] + '/' + params[:repository] + ' export ' + params[:codename] + "' " + reprepro_params[:owner])
+      is_expected.to contain_exec("export distribution #{params[:codename]}")
+        .with_command("su -c 'reprepro -b #{reprepro_params[:basedir]}/#{params[:repository]} export #{params[:codename]}' #{reprepro_params[:owner]}")
         .with_path(['/bin', '/usr/bin'])
         .with_refreshonly(true)
         .with_logoutput('on_failure')
     }
+
     it {
-      is_expected.to contain_file(reprepro_params[:basedir] + '/' + params[:repository] + '/tmp/' + params[:codename])
+      is_expected.to contain_file("#{reprepro_params[:basedir]}/#{params[:repository]}/tmp/#{params[:codename]}")
         .with_ensure('directory')
         .with_mode('0755')
     }
-    it { is_expected.to contain_cron(params[:codename] + ' cron') }
+
+    it { is_expected.to contain_cron("#{params[:codename]} cron") }
   end
 
   on_supported_os.each do |os, os_facts|
@@ -95,7 +100,7 @@ describe 'reprepro::distribution' do
         let :params do
           default_params.merge(
             name: 'precise',
-            codename: 'precise',
+            codename: 'precise'
           )
         end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'reprepro::repository' do
@@ -20,7 +22,7 @@ describe 'reprepro::repository' do
     it { is_expected.to compile.with_all_deps }
 
     it {
-      is_expected.to contain_file(reprepro_params[:basedir] + '/' + title)
+      is_expected.to contain_file("#{reprepro_params[:basedir]}/#{title}")
         .with_ensure('directory')
         .with_mode('2755')
         .with_owner(reprepro_params[:owner])
@@ -31,13 +33,13 @@ describe 'reprepro::repository' do
     }
 
     it {
-      [reprepro_params[:basedir] + '/' + title + '/dists',
-       reprepro_params[:basedir] + '/' + title + '/pool',
-       reprepro_params[:basedir] + '/' + title + '/conf',
-       reprepro_params[:basedir] + '/' + title + '/lists',
-       reprepro_params[:basedir] + '/' + title + '/db',
-       reprepro_params[:basedir] + '/' + title + '/logs',
-       reprepro_params[:basedir] + '/' + title + '/tmp'].each do |dirname|
+      ["#{reprepro_params[:basedir]}/#{title}/dists",
+       "#{reprepro_params[:basedir]}/#{title}/pool",
+       "#{reprepro_params[:basedir]}/#{title}/conf",
+       "#{reprepro_params[:basedir]}/#{title}/lists",
+       "#{reprepro_params[:basedir]}/#{title}/db",
+       "#{reprepro_params[:basedir]}/#{title}/logs",
+       "#{reprepro_params[:basedir]}/#{title}/tmp"].each do |dirname|
         is_expected.to contain_file(dirname)
           .with_ensure('directory')
           .with_mode('2755')
@@ -47,64 +49,72 @@ describe 'reprepro::repository' do
     }
 
     it {
-      is_expected.to contain_file(reprepro_params[:basedir] + '/' + title + '/incoming')
+      is_expected.to contain_file("#{reprepro_params[:basedir]}/#{title}/incoming")
         .with_ensure('directory')
         .with_mode('2775')
         .with_owner(reprepro_params[:owner])
         .with_group(reprepro_params[:group])
     }
+
     it {
-      is_expected.to contain_file(reprepro_params[:basedir] + '/' + title + '/conf/options')
+      is_expected.to contain_file("#{reprepro_params[:basedir]}/#{title}/conf/options")
         .with_ensure(params[:ensure])
         .with_mode('0640')
         .with_owner(reprepro_params[:owner])
         .with_group(reprepro_params[:group])
     }
+
     it {
-      is_expected.to contain_file(reprepro_params[:basedir] + '/' + title + '/conf/incoming')
+      is_expected.to contain_file("#{reprepro_params[:basedir]}/#{title}/conf/incoming")
         .with_ensure(params[:ensure])
         .with_mode('0640')
         .with_owner(reprepro_params[:owner])
         .with_group(reprepro_params[:group])
     }
+
     it {
-      is_expected.to contain_concat(reprepro_params[:basedir] + '/' + title + '/conf/distributions')
+      is_expected.to contain_concat("#{reprepro_params[:basedir]}/#{title}/conf/distributions")
         .with_mode('0640')
         .with_owner(reprepro_params[:owner])
         .with_group(reprepro_params[:group])
     }
+
     it {
-      is_expected.to contain_concat__fragment('00-distributions-' + title)
-        .with_target(reprepro_params[:basedir] + '/' + title + '/conf/distributions')
-        .with_content("# Puppet managed\n")
-    }
-    it {
-      is_expected.to contain_concat(reprepro_params[:basedir] + '/' + title + '/conf/updates')
-        .with_mode('0640')
-        .with_owner(reprepro_params[:owner])
-        .with_group(reprepro_params[:group])
-    }
-    it {
-      is_expected.to contain_concat__fragment('00-update-' + title)
-        .with_target(reprepro_params[:basedir] + '/' + title + '/conf/updates')
-        .with_content("# Puppet managed\n")
-    }
-    it {
-      is_expected.to contain_concat(reprepro_params[:basedir] + '/' + title + '/conf/pulls')
-        .with_mode('0644')
-        .with_owner('root')
-        .with_group('root')
-    }
-    it {
-      is_expected.to contain_concat__fragment('00-pulls-' + title)
-        .with_target(reprepro_params[:basedir] + '/' + title + '/conf/pulls')
+      is_expected.to contain_concat__fragment("00-distributions-#{title}")
+        .with_target("#{reprepro_params[:basedir]}/#{title}/conf/distributions")
         .with_content("# Puppet managed\n")
     }
 
     it {
-      is_expected.to contain_concat__fragment('update-repositories add repository ' + title)
-        .with_target(reprepro_params[:homedir] + '/bin/update-all-repositories.sh')
-        .with_order('50-' + title)
+      is_expected.to contain_concat("#{reprepro_params[:basedir]}/#{title}/conf/updates")
+        .with_mode('0640')
+        .with_owner(reprepro_params[:owner])
+        .with_group(reprepro_params[:group])
+    }
+
+    it {
+      is_expected.to contain_concat__fragment("00-update-#{title}")
+        .with_target("#{reprepro_params[:basedir]}/#{title}/conf/updates")
+        .with_content("# Puppet managed\n")
+    }
+
+    it {
+      is_expected.to contain_concat("#{reprepro_params[:basedir]}/#{title}/conf/pulls")
+        .with_mode('0644')
+        .with_owner('root')
+        .with_group('root')
+    }
+
+    it {
+      is_expected.to contain_concat__fragment("00-pulls-#{title}")
+        .with_target("#{reprepro_params[:basedir]}/#{title}/conf/pulls")
+        .with_content("# Puppet managed\n")
+    }
+
+    it {
+      is_expected.to contain_concat__fragment("update-repositories add repository #{title}")
+        .with_target("#{reprepro_params[:homedir]}/bin/update-all-repositories.sh")
+        .with_order("50-#{title}")
     }
   end
 
@@ -165,7 +175,7 @@ describe 'reprepro::repository' do
         end
 
         it {
-          is_expected.to contain_file(reprepro_params[:basedir] + '/' + title)
+          is_expected.to contain_file("#{reprepro_params[:basedir]}/#{title}")
             .with_ensure('directory')
             .with_mode('2755')
             .with_owner(reprepro_params[:owner])
@@ -190,12 +200,12 @@ describe 'reprepro::repository' do
         let :params do
           default_params.merge(
             ensure: 'absent',
-            always_recurse: false,
+            always_recurse: false
           )
         end
 
         it {
-          is_expected.to contain_file(reprepro_params[:basedir] + '/' + title)
+          is_expected.to contain_file("#{reprepro_params[:basedir]}/#{title}")
             .with_ensure('absent')
             .with_purge(true)
             .with_recurse(true)
@@ -216,24 +226,26 @@ describe 'reprepro::repository' do
         let(:title) { 'localpkgs' }
         let :params do
           default_params.merge(
-            documentroot: '/tmp/docroot',
+            documentroot: '/tmp/docroot'
           )
         end
 
         it_behaves_like 'reprepro::repository shared examples'
         it {
-          is_expected.to contain_file('/tmp/docroot/' + title)
+          is_expected.to contain_file("/tmp/docroot/#{title}")
             .with_ensure('directory')
         }
+
         it {
-          is_expected.to contain_file('/tmp/docroot/' + title + '/dists')
+          is_expected.to contain_file("/tmp/docroot/#{title}/dists")
             .with_ensure('link')
-            .with_target('/var/packages/' + title + '/dists')
+            .with_target("/var/packages/#{title}/dists")
         }
+
         it {
-          is_expected.to contain_file('/tmp/docroot/' + title + '/pool')
+          is_expected.to contain_file("/tmp/docroot/#{title}/pool")
             .with_ensure('link')
-            .with_target('/var/packages/' + title + '/pool')
+            .with_target("/var/packages/#{title}/pool")
         }
       end
     end

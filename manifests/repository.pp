@@ -189,7 +189,7 @@ define reprepro::repository (
       $link_ensure = 'link'
     }
     file { "${documentroot}/${repo_name}":
-      ensure  => $directory_ensure,
+      ensure => $directory_ensure,
     }
     file { "${documentroot}/${repo_name}/dists":
       ensure => $link_ensure,

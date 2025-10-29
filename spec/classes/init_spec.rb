@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'reprepro' do
@@ -6,7 +8,7 @@ describe 'reprepro' do
       basedir: '/var/packages',
       homedir: '/var/packages',
       manage_user: true,
-      user_name:  'reprepro',
+      user_name: 'reprepro',
       group_name: 'reprepro',
       keys: {},
       key_defaults: {},
@@ -46,41 +48,46 @@ describe 'reprepro' do
         .with_gid(params[:group_name])
         .with_managehome(true)
         .with_system(true)
-        .that_requires('Group[' + params[:group_name] + ']')
-        .that_comes_before('File[' + params[:homedir] + '/.gnupg]')
-        .that_comes_before('File[' + params[:homedir] + '/bin]')
+        .that_requires("Group[#{params[:group_name]}]")
+        .that_comes_before("File[#{params[:homedir]}/.gnupg]")
+        .that_comes_before("File[#{params[:homedir]}/bin]")
     }
+
     it {
-      is_expected.to contain_file(params[:homedir] + '/.gnupg')
+      is_expected.to contain_file("#{params[:homedir]}/.gnupg")
         .with_ensure('directory')
         .with_mode('0700')
         .with_owner(params[:user_name])
         .with_group(params[:group_name])
     }
+
     it {
-      is_expected.to contain_file(params[:homedir] + '/bin')
+      is_expected.to contain_file("#{params[:homedir]}/bin")
         .with_ensure('directory')
         .with_mode('0755')
         .with_owner(params[:user_name])
         .with_group(params[:group_name])
     }
+
     it {
-      is_expected.to contain_file(params[:homedir] + '/bin/update-distribution.sh')
+      is_expected.to contain_file("#{params[:homedir]}/bin/update-distribution.sh")
         .with_mode('0755')
         .with_content(%r{while getopts})
         .with_owner(params[:user_name])
         .with_group(params[:group_name])
-        .that_requires('File[' + params[:homedir] + '/bin]')
+        .that_requires("File[#{params[:homedir]}/bin]")
     }
+
     it {
-      is_expected.to contain_concat(params[:homedir] + '/bin/update-all-repositories.sh')
+      is_expected.to contain_concat("#{params[:homedir]}/bin/update-all-repositories.sh")
         .with_owner(params[:user_name])
         .with_group(params[:group_name])
         .with_mode('0755')
     }
+
     it {
       is_expected.to contain_concat__fragment('update-repositories header')
-        .with_target(params[:homedir] + '/bin/update-all-repositories.sh')
+        .with_target("#{params[:homedir]}/bin/update-all-repositories.sh")
         .with_order('0')
     }
   end
@@ -103,7 +110,7 @@ describe 'reprepro' do
             basedir: '/somewhere/packages',
             homedir: '/somewhere/homedir',
             user_name: 'repouser',
-            group_name: 'repogroup',
+            group_name: 'repogroup'
           )
         end
 

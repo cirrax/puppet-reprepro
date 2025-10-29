@@ -110,12 +110,12 @@ $ su - reprepro
 $ gpg --gen-key --pinentry-mode loopback
 ```
 
-Note: if you protect your key with a passphrase, you have to manage packages manually 
+Note: if you protect your key with a passphrase, you have to manage packages manually
       in order to enter the passphrase.
 
 Note2: --pinentry-mode loopback is needed since we used su to become the reprepro user.
 
-By referencing the key ID with the parameter sign\_with of the distribution resources, reprepro will use the key to sign. 
+By referencing the key ID with the parameter sign\_with of the distribution resources, reprepro will use the key to sign.
 
 ## Reference
 All classes and reources are documented in theire respective code file.

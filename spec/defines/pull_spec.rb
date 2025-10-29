@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'reprepro::pull' do
@@ -5,7 +7,7 @@ describe 'reprepro::pull' do
     {
       repository: 'localpkgs',
       from: 'devs',
-      components:      '',
+      components: '',
       architectures: '',
       udebcomponents: '',
       filter_action: '',
@@ -19,8 +21,8 @@ describe 'reprepro::pull' do
     it { is_expected.to compile.with_all_deps }
 
     it {
-      is_expected.to contain_concat__fragment('pulls-' + title)
-        .with_target(reprepro_params[:basedir] + '/' + params[:repository] + '/conf/pulls')
+      is_expected.to contain_concat__fragment("pulls-#{title}")
+        .with_target("#{reprepro_params[:basedir]}/#{params[:repository]}/conf/pulls")
     }
   end
 
@@ -43,7 +45,7 @@ describe 'reprepro::pull' do
         let :params do
           default_params.merge(
             repository: 'localpkgs',
-            from: 'dev',
+            from: 'dev'
           )
         end
 
@@ -66,7 +68,7 @@ describe 'reprepro::pull' do
           default_params.merge(
             name: 'lenny-backports',
             repository: 'localpkgs',
-            from: 'dev',
+            from: 'dev'
           )
         end
 

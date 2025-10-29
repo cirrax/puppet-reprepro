@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'reprepro::filterlist' do
@@ -13,7 +15,7 @@ describe 'reprepro::filterlist' do
     it { is_expected.to compile.with_all_deps }
 
     it {
-      is_expected.to contain_file(reprepro_params[:basedir] + '/' + params[:repository] + '/conf/' + title + '-filter-list')
+      is_expected.to contain_file("#{reprepro_params[:basedir]}/#{params[:repository]}/conf/#{title}-filter-list")
         .with_ensure(params[:ensure])
         .with_owner('root')
         .with_mode('0664')
@@ -38,7 +40,7 @@ describe 'reprepro::filterlist' do
         let(:title) { 'lenny-backports' }
         let(:params) do
           default_params.merge(
-            packages: ['somepackage install', 'other install'],
+            packages: ['somepackage install', 'other install']
           )
         end
 
@@ -59,7 +61,7 @@ describe 'reprepro::filterlist' do
         let(:title) { 'lenny-backports' }
         let :params do
           default_params.merge(
-            packages: ['somepackage install', 'other install'],
+            packages: ['somepackage install', 'other install']
           )
         end
 

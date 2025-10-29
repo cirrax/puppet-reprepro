@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'reprepro::update' do
@@ -12,9 +14,10 @@ describe 'reprepro::update' do
 
   shared_examples 'reprepro::update shared examples' do
     it { is_expected.to compile.with_all_deps }
+
     it {
-      is_expected.to contain_concat__fragment('update-' + title)
-        .with_target(reprepro_params[:basedir] + '/' + params[:repository] + '/conf/updates')
+      is_expected.to contain_concat__fragment("update-#{title}")
+        .with_target("#{reprepro_params[:basedir]}/#{params[:repository]}/conf/updates")
     }
   end
 

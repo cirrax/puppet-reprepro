@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'reprepro::key' do
@@ -7,16 +9,18 @@ describe 'reprepro::key' do
 
   shared_examples 'reprepro::key shared examples' do
     it { is_expected.to compile.with_all_deps }
+
     it {
-      is_expected.to contain_file(reprepro_params[:homedir] + '/.gnupg/' + title)
+      is_expected.to contain_file("#{reprepro_params[:homedir]}/.gnupg/#{title}")
         .with_owner(reprepro_params[:owner])
         .with_group(reprepro_params[:group])
         .with_mode('0660')
     }
+
     it {
-      is_expected.to contain_exec('import-' + title)
+      is_expected.to contain_exec("import-#{title}")
         .with_refreshonly(true)
-        .with_command("su -c 'gpg --import " + reprepro_params[:homedir] + '/.gnupg/' + title + "' " + reprepro_params[:owner])
+        .with_command("su -c 'gpg --import #{reprepro_params[:homedir]}/.gnupg/#{title}' #{reprepro_params[:owner]}")
     }
   end
 
