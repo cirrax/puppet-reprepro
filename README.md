@@ -1,10 +1,5 @@
 # reprepro puppet module
 
-[![Build Status](https://travis-ci.org/cirrax/puppet-reprepro.svg?branch=master)](https://travis-ci.org/cirrax/puppet-reprepro)
-[![Puppet Forge](https://img.shields.io/puppetforge/v/cirrax/reprepro.svg?style=flat-square)](https://forge.puppetlabs.com/cirrax/reprepro)
-[![Puppet Forge](https://img.shields.io/puppetforge/dt/cirrax/reprepro.svg?style=flat-square)](https://forge.puppet.com/cirrax/reprepro)
-[![Puppet Forge](https://img.shields.io/puppetforge/e/cirrax/reprepro.svg?style=flat-square)](https://forge.puppet.com/cirrax/reprepro)
-[![Puppet Forge](https://img.shields.io/puppetforge/f/cirrax/reprepro.svg?style=flat-square)](https://forge.puppet.com/cirrax/reprepro)
 
 #### Table of Contents
 
